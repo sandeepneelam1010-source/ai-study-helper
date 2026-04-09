@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function HomeScreen() {
@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
     try {
       const response = await fetch(
-        "https://keli-nondurable-kristie.ngrok-free.dev/ask",
+        "https://ai-study-helper-pshe.onrender.com/ask",
         {
           method: "POST",
           headers: {

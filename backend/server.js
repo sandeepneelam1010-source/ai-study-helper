@@ -6,15 +6,35 @@ const axios = require("axios");
 
 const app = express();
 
-app.use(cors());
+/* -------------------- CORS CONFIG -------------------- */
+/* allow requests from your deployed website */
+app.use(
+  cors({
+    origin: [
+      "https://ai-study-helper-alpha.vercel.app",
+      "http://localhost:8081",
+      "http://localhost:19006"
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
+  })
+);
+
+/* -------------------- MIDDLEWARE -------------------- */
 app.use(express.json());
 
+/* -------------------- TEST ROUTE -------------------- */
 app.get("/", (req, res) => {
   res.send("Backend server is running");
 });
 
+/* -------------------- AI ENDPOINT -------------------- */
 app.post("/ask", async (req, res) => {
-  const question = req.body.question;
+  const { question } = req.body;
+
+  if (!question) {
+    return res.status(400).json({ answer: "Question is required" });
+  }
 
   try {
     const response = await axios.post(
@@ -39,11 +59,17 @@ app.post("/ask", async (req, res) => {
     res.json({ answer });
 
   } catch (error) {
-    console.error(error.response?.data || error.message);
-    res.status(500).json({ answer: "AI server error" });
+    console.error("Groq API Error:", error.response?.data || error.message);
+
+    res.status(500).json({
+      answer: "AI server error"
+    });
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+/* -------------------- START SERVER -------------------- */
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
